@@ -16,4 +16,7 @@ class Payroll extends Model
         'net_pay',
         'generated_at',
     ];
+    public function employee() {
+        return $this->belongsTo(Employee::class);
+    }
 }

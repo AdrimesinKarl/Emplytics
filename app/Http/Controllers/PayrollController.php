@@ -16,7 +16,6 @@ class PayrollController extends Controller
     public function index()
     {
         $payrolls = Payroll::with('employee')->get();
-
         return view('payrolls.index', compact('payrolls'));
     }
     /**
@@ -25,57 +24,69 @@ class PayrollController extends Controller
     public function create()
     {
         $employees = Employee::all();
-
         return view('payrolls.create', compact('employees'));
     }
     /**
      * Store a newly generated payroll
      */
-    public function store(Request $request)
-    {
-        $employeeId = $request->employee_id;
-        $start = $request->period_start;
-        $end = $request->period_end;
+public function store(Request $request)
+{
+    $employeeId = $request->employee_id;
+    $start = $request->pay_period_start;
+    $end = $request->pay_period_end;
 
-        $employee = Employee::findOrFail($employeeId);
+    //check if payroll already exists for this employee and period
+    $exists = Payroll::where('employee_id', $employeeId)
+    ->where('pay_period_start', $start)
+    ->where('pay_period_end', $end)
+    ->exists();
 
-        // Calculate total hours from attendance
-        $attendances = Attendance::where('employee_id', $employeeId)
-            ->whereBetween('date', [$start, $end])
-            ->get();
+    if ($exists) {
+    return redirect()->back()->with('error', 'Payroll already exists for this period.');
+}
 
-        $totalHours = 0;
+    $employee = Employee::findOrFail($employeeId);
 
-        foreach ($attendances as $attendance) {
-            if ($attendance->check_in && $attendance->check_out) {
-                $checkIn = Carbon::parse($attendance->check_in);
-                $checkOut = Carbon::parse($attendance->check_out);
+    // Calculate total hours from attendance
+    $attendances = Attendance::where('employee_id', $employeeId)
+        ->whereBetween('date', [$start, $end])
+        ->get();
 
-                $totalHours += $checkOut->diffInMinutes($checkIn) / 60;
-            }
+    $totalHours = 0;
+
+    foreach ($attendances as $attendance) {
+        if ($attendance->check_in && $attendance->check_out) {
+            $checkIn = Carbon::parse($attendance->check_in);
+            $checkOut = Carbon::parse($attendance->check_out);
+
+            $totalHours += $checkOut->diffInMinutes($checkIn) / 60;
         }
-
-        // Calculate gross pay, deductions, net pay
-        $grossPay = $totalHours * $employee->hourly_rate;
-        $deductions = 0;
-        $netPay = $grossPay - $deductions;
-
-        // Save payroll
-        Payroll::create([
-    'employee_id' => $employeeId,
-    'pay_period_start' => $start,
-    'pay_period_end' => $end,
-    'total_hours' => $totalHours,
-    'gross_pay' => $grossPay,
-    'deductions' => $deductions,
-    'net_pay' => $netPay,
-    'generated_at' => now(),
-]);
-
-
-        return redirect()->route('payrolls.index')
-            ->with('success', 'Payroll generated successfully');
     }
+
+    // Calculate gross pay, deductions, net pay
+    $grossPay = $totalHours * $employee->hourly_rate;
+    $deductions = 0;
+    $netPay = $grossPay - $deductions;
+
+    // Save payroll
+    Payroll::create([
+        'employee_id' => $employeeId,
+        'pay_period_start' => $start,
+        'pay_period_end' => $end,
+
+        // automatically calculated
+        'total_hours' => round($totalHours, 2),
+        'gross_pay' => round($grossPay, 2),
+        'deductions' => round($deductions, 2),
+        'net_pay' => round($netPay, 2),
+        'generated_at' => now(),
+    ]);
+
+    return redirect()->route('payrolls.index')
+        ->with('success', 'Payroll generated successfully');
+
+}
+
 
         /**
          * Display the specified resource.
@@ -84,7 +95,6 @@ class PayrollController extends Controller
         {
             //
         }
-
         /**
          * Show the form for editing the specified resource.
          */

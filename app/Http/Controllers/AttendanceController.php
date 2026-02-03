@@ -29,7 +29,6 @@
         {
             return view('attendances.edit', compact('attendance')); // Return the edit attendance form view with the specific attendance record
         }
-
     /**
          * Display the specified resource.
          */

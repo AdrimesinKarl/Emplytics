@@ -49,7 +49,6 @@ class EmployeeController extends Controller
     return redirect()->route('employees.index')->with('success', 'Employee created!');
 
     }
-
     /**
      * Display the specified resource.
      */
