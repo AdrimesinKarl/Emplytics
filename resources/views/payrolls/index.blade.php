@@ -25,6 +25,17 @@
             <td>{{ number_format($payroll->total_hours, 2) }}</td>
             <td>{{ number_format($payroll->net_pay, 2) }}</td>
         </tr>
+        
+        <td>
+            <a href="{{ route('payrolls.edit', $payroll->id) }}" class="btn btn-primary">Edit</a>
+            <form method="POST"
+                action="{{ route('payrolls.destroy', $payroll->id) }}"
+                onsubmit="return confirm('Are you sure you want to delete this payroll record?')">
+                @csrf
+                @method('DELETE')
+                <x-button type="submit">Delete</x-button>
+            </form>
+        </td>
     @endforeach
 </table>
 @endif

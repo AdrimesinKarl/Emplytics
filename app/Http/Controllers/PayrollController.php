@@ -84,37 +84,49 @@ public function store(Request $request)
 
     return redirect()->route('payrolls.index')
         ->with('success', 'Payroll generated successfully');
-
 }
-
-
         /**
-         * Display the specified resource.
-         */
+        * Display the specified resource.
+        */
         public function show(Payroll $payroll)
         {
-            //
+        //
         }
         /**
-         * Show the form for editing the specified resource.
-         */
+        * Show the form for editing the specified resource.
+        */
         public function edit(Payroll $payroll)
         {
-            //
+            return view('payrolls.edit', compact('payroll'));
         }
-
         /**
-         * Update the specified resource in storage.
-         */
+        * Update the specified resource in storage.
+        */
         public function update(Request $request, Payroll $payroll)
         {
-            //
+            $request->validate([
+                'total_hours' => 'required|numeric|min:0',
+                'deductions' => 'required|numeric|min:0',
+            ]);
+
+            $payroll->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'pay_period_start' => $request->pay_period_start,
+                'pay_period_end' => $request->pay_period_end,
+                'total_hours' => $request->total_hours,
+                'net_pay' => $request->net_pay,
+            ]);
+
+            return redirect()->route('payrolls.index')
+                ->with('success', 'Payroll updated successfully');
         }
-        /**
+            /**
          * Remove the specified resource from storage.
          */
         public function destroy(Payroll $payroll)
         {
-            //
+            $payroll->delete();
+            return redirect()->route('payrolls.index')->with('success', 'Payroll deleted successfully!');
         }
 }
