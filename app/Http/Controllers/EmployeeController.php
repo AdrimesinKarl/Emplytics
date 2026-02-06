@@ -2,95 +2,129 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use Illuminate\Http\Request;
-use App\Models\Employee; //tells php where the class is
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
+/**
+ * Handles all administrative actions for Employee management,
+ * including listing, searching, creating, updating, and deleting.
+ */
 class EmployeeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of employees.
+     * * Filters the collection if a 'search' query is present in the request.
+     * Searches across first name, last name, and position.
+     *
+     * @param Request $request
+     * @return View
      */
-    public function index(Request $request) {
-        // Retrieve all employees from the database with optional search filtering
+    public function index(Request $request): View
+    {
         $employees = Employee::query()
-        ->when($request->search, function($q, $search) {
-            $q->where('first_name', 'like', "%{$search}%") //where clause to filter employees based on search input
-            ->orWhere('last_name', 'like', "%{$search}%") //orWhere clause to include multiple conditions "OR logic"
-            ->orWhere('position', 'like', "%{$search}%"); //like used to match patterns in a column //partial matches
-    })
-        ->get();
+            // Only apply the search filter if the search input is not empty
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->search;
+                
+                // Grouping OR clauses to ensure they don't interfere with other constraints
+                $query->where(function ($q) use ($search) {
+                    $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('position', 'like', "%{$search}%");
+                });
+            })
+            ->latest() // Order by the most recently created
+            ->get();
 
-    return view('employees.index', compact('employees')); //past the data to the view
+        return view('employees.index', compact('employees'));
     }
+
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new employee.
+     *
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
-        return view('employees.create'); //return the create employee form view
+        return view('employees.create');
     }
+
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created employee in the database.
+     * * Validates input before persisting data to ensure data integrity.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request){
-        //validate the incoming request data
+    public function store(Request $request): RedirectResponse
+    {
+        // Define validation rules for a new employee record
         $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email',
-            'position' => 'required|string|max:255',
-            'hourly_rate' => 'required|numeric|min:0',
+            'first_name'  => ['required', 'string', 'max:255'],
+            'last_name'   => ['required', 'string', 'max:255'],
+            'email'       => ['required', 'email', 'unique:employees,email'],
+            'position'    => ['required', 'string', 'max:255'],
+            'hourly_rate' => ['required', 'numeric', 'min:0'],
         ]);
 
-    // Create a new employee record
-    Employee::create($validated);
+        // Mass-assign validated data to create the record
+        Employee::create($validated);
 
-    //redirect to the employee list with a success message
-    return redirect()->route('employees.index')->with('success', 'Employee created!');
-
-    }
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Employee $employee)
-    {
-        return view('employees.edit', compact('employee')); //return the edit employee form view with the employee data
+        // Redirect with a success notification
+        return to_route('employees.index')
+            ->with('success', 'Employee created successfully!');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Show the form for editing an existing employee.
+     *
+     * @param Employee $employee (Injected via Route Model Binding)
+     * @return View
      */
-    public function update(Request $request, Employee $employee)
+    public function edit(Employee $employee): View
     {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email'=> 'required|email|unique:employees,email,'.$employee->id,
-            'position' => 'required|string|max:255',
-            'hourly_rate' => 'required|numeric|min:0',
+        return view('employees.edit', compact('employee'));
+    }
+
+    /**
+     * Update the specified employee in the database.
+     *
+     * @param Request $request
+     * @param Employee $employee
+     * @return RedirectResponse
+     */
+    public function update(Request $request, Employee $employee): RedirectResponse
+    {
+        // Validation rules, ignoring the current employee ID for the unique email check
+        $validated = $request->validate([
+            'first_name'  => ['required', 'string', 'max:255'],
+            'last_name'   => ['required', 'string', 'max:255'],
+            'email'       => ['required', 'email', "unique:employees,email,{$employee->id}"],
+            'position'    => ['required', 'string', 'max:255'],
+            'hourly_rate' => ['required', 'numeric', 'min:0'],
         ]);
 
-        $employee->update($request->all()); //update the employee record with the validated data
+        // Update the model instance with validated data
+        $employee->update($validated);
 
-        return redirect()->route('employees.index')
-        ->with('success', 'Employee updated successfully');
-
+        return to_route('employees.index')
+            ->with('success', 'Employee updated successfully');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified employee from the database.
+     *
+     * @param Employee $employee
+     * @return RedirectResponse
      */
-    public function destroy(Employee $employee)
+    public function destroy(Employee $employee): RedirectResponse
     {
+        // Delete the record from the database
         $employee->delete();
-        return redirect()->route('employees.index')
-        ->with('success', 'Employee deleted successfully');
+
+        return to_route('employees.index')
+            ->with('success', 'Employee deleted successfully');
     }
 }

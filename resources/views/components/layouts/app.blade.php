@@ -2,6 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Employee Management System - @yield('title')</title>
+        <link rel="stylesheet" href="/css/app.css">
     </head>
     <body>
         <header>

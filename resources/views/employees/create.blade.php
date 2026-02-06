@@ -1,40 +1,65 @@
-@extends('components.layouts.app') <!--this tells Blade to use the layout file located at resources/views/layouts/app.blade.php-->
+@extends('components.layouts.app')
 
-@section('content') <!--this content will be injected into the layout'-->
+@section('title', 'Create Employee')
 
-    <h1>Create Employee</h1>
+@section('content')
+<div class="container">
+    <h1>Create New Employee</h1>
     
     <form action="{{ route('employees.store') }}" method="POST">
-    @csrf
+        @csrf
 
-    <label for="first_name">First Name</label>
-    <input type="text" id="first_name" name="first_name" required><br><br>
+        {{-- First Name --}}
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name"
+                value="{{ old('first_name') }}" required>
+            @error('first_name') <span class="error-message">{{ $message }}</span> @enderror
+        </div>
 
-    <label for="last_name">Last Name</label>
-    <input type="text" id="last_name" name="last_name" required><br><br>
+        {{-- Last Name --}}
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name"
+                value="{{ old('last_name') }}" required>
+            @error('last_name') <span class="error-message">{{ $message }}</span> @enderror
+        </div>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required><br><br>
+        {{-- Email Address --}}
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email"
+                value="{{ old('email') }}" required>
+            @error('email') <span class="error-message">{{ $message }}</span> @enderror
+        </div>
 
-    <label for="position">Position</label>
-    <input type="text" id="position" name="position" required><br><br>
+        {{-- Job Position --}}
+        <div class="form-group">
+            <label for="position">Position</label>
+            <input type="text" id="position" name="position"
+                value="{{ old('position') }}" required>
+            @error('position') <span class="error-message">{{ $message }}</span> @enderror
+        </div>
 
-    <label for="hourly_rate">Hourly Rate</label>
-    <input type="number" id="hourly_rate" name="hourly_rate" step="0.01" min="0" required><br><br>
+        {{-- Pay Rate --}}
+        <div class="form-group">
+            <label for="hourly_rate">Hourly Rate ($)</label>
+            <input type="number" id="hourly_rate" name="hourly_rate"
+                step="0.01" min="0" value="{{ old('hourly_rate') }}" required>
+            @error('hourly_rate') <span class="error-message">{{ $message }}</span> @enderror
+        </div>
 
-    <x-button type="submit" class="btn btn-primary">
-        Create Employee
-    </x-button>
-
+        <div class="form-actions">
+            <x-button type="submit">Create Employee</x-button>
+            <x-button href="{{ route('employees.index') }}" type="secondary">Cancel</x-button>
+        </div>
     </form>
 
+    {{-- Fallback for global errors --}}
     @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        <div class="alert alert-danger mt-3">
+            <strong>Whoops!</strong> There were some problems with your input.
+        </div>
+    @endif
+</div>
 @endsection

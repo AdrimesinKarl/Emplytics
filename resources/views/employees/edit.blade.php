@@ -1,25 +1,59 @@
+@extends('components.layouts.app')
 
-<h1>Edit Employee</h1>
+@section('title', 'Edit Employee')
 
-    <form action="{{ route('employees.update', $employee->id) }}" method="POST">
-        @csrf <!--this generates a CSRF token for security and protects against cross-site request forgery attacks-->
-        @method('PUT') <!--method spoofing to indicate this is a PUT request-->
+@section('content')
+<div class="container">
+    <h1>Edit Employee: {{ $employee->first_name }} {{ $employee->last_name }}</h1>
 
-        <label for="first_name">First Name</label>
-        <input type="text" id="first_name" name="first_name" value="{{ $employee->first_name }}" required><br><br>
+    <form action="{{ route('employees.update', $employee) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-        <label for="last_name">Last Name</label>
-        <input type="text" id="last_name" name="last_name" value="{{ $employee->last_name }}" required><br><br>
+        {{-- First Name --}}
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name"
+                value="{{ old('first_name', $employee->first_name) }}" required>
+            @error('first_name') <span class="error-text">{{ $message }}</span> @enderror
+        </div>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" value="{{ $employee->email }}" required><br><br>
+        {{-- Last Name --}}
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name"
+                value="{{ old('last_name', $employee->last_name) }}" required>
+            @error('last_name') <span class="error-text">{{ $message }}</span> @enderror
+        </div>
 
-        <label for="position">Position</label>
-        <input type="text" id="position" name="position" value="{{ $employee->position }}" required><br><br>
+        {{-- Email --}}
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email"
+                value="{{ old('email', $employee->email) }}" required>
+            @error('email') <span class="error-text">{{ $message }}</span> @enderror
+        </div>
 
-        <label for="hourly_rate">Hourly Rate</label>
-        <input type="number" id="hourly_rate" name="hourly_rate" step="0.01" min="0" value="{{ $employee->hourly_rate }}" required><br><br>
+        {{-- Position --}}
+        <div class="form-group">
+            <label for="position">Position</label>
+            <input type="text" id="position" name="position"
+                value="{{ old('position', $employee->position) }}" required>
+            @error('position') <span class="error-text">{{ $message }}</span> @enderror
+        </div>
 
-        <x-button type="success">Submit</x-button>
-        <x-button href="{{ route('employees.index') }}" type="secondary">Back</x-button>
+        {{-- Hourly Rate --}}
+        <div class="form-group">
+            <label for="hourly_rate">Hourly Rate ($)</label>
+            <input type="number" id="hourly_rate" name="hourly_rate" step="0.01" min="0"
+                value="{{ old('hourly_rate', $employee->hourly_rate) }}" required>
+            @error('hourly_rate') <span class="error-text">{{ $message }}</span> @enderror
+        </div>
+
+        <div class="form-actions">
+            <x-button type="submit">Update Employee</x-button>
+            <x-button href="{{ route('employees.index') }}" type="secondary">Cancel</x-button>
+        </div>
     </form>
+</div>
+@endsection

@@ -1,42 +1,70 @@
-@extends('components.layouts.app') <!--this tells Blade to use the layout file located at resources/views/layouts/app.blade.php-->
+@extends('components.layouts.app')
 
-@section('title' , 'Attendance List') <!--this sets the title for the layout-->
+@section('title', 'Attendance List')
 
 @section('content')
-    
-    <h1>Attendance List</h1> <!--this content will be injected into the layout-->
+    <div class="header-section">
+        <h1>Attendance List</h1>
+        <x-button href="{{ route('attendances.create') }}">Record New Attendance</x-button>
+    </div>
 
-    <form action="{{ route('attendances.index') }}" method="GET">
-        <input type="date" name="date" value="{{ request('date') }}"> <!--request date keeps the old input value in the search box after submission-->
-        <x-button type="submit">Filter by Date</x-button>
-    </form>
+    {{-- Filter Section --}}
+    <div class="filter-card">
+        <form action="{{ route('attendances.index') }}" method="GET">
+            <label for="date">Filter by Date:</label>
+            <input type="date" id="date" name="date" value="{{ request('date') }}">
+            <x-button type="submit" type="secondary">Apply Filter</x-button>
+            @if(request('date'))
+                <a href="{{ route('attendances.index') }}" class="btn-link">Clear Filter</a>
+            @endif
+        </form>
+    </div>
 
-    @if (count($attendances) > 0) <!--check if the database has any data-->
-
-        <table border="1">
-    <tr>
-        <th>Employee Name</th>
-        <th>Date</th>
-        <th>Check In</th>
-        <th>Check Out</th>
-        <th>Hours Worked</th>
-    </tr>
-
-    @foreach ($attendances as $attendance)
-    <tr>
-        <td>{{ $attendance->employee->first_name }} {{ $attendance->employee->last_name }}</td>
-        <td>{{ $attendance->date }}</td>
-        <td>{{ $attendance->check_in }}</td>
-        <td>{{ $attendance->check_out }}</td>
-        <td>{{ number_format($attendance->hours_worked, 2) }}</td> <!--Calculate how many hours this employee worked today, format it to 2 decimal places, and display it in a table cell-->
-    </tr>
-    @endforeach
-</table>
-
+    {{-- Data Display --}}
+    @if ($attendances->isNotEmpty())
+        <div class="table-container">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Date</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Hours Worked</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($attendances as $attendance)
+                        <tr>
+                            {{-- Accessing the related employee model --}}
+                            <td>{{ $attendance->employee->first_name }} {{ $attendance->employee->last_name }}</td>
+                            
+                            {{-- Formatting dates and times via Carbon --}}
+                            <td>{{ $attendance->date->format('M d, Y') }}</td>
+                            <td>{{ $attendance->check_in ? $attendance->check_in->format('h:i A') : '--' }}</td>
+                            <td>{{ $attendance->check_out ? $attendance->check_out->format('h:i A') : '--' }}</td>
+                            
+                            {{-- Using the accessor we built in the Model --}}
+                            <td><strong>{{ number_format($attendance->hours_worked, 2) }} hrs</strong></td>
+                            
+                            <td>
+                                <a href="{{ route('attendances.edit', $attendance) }}">Edit</a>
+                                {{-- Simple Delete Form --}}
+                                <form action="{{ route('attendances.destroy', $attendance) }}" method="POST" style="display:inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Delete this record?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     @else
-    <p>No attendance records found.</p>
+        <div class="empty-state">
+            <p>No attendance records found for the selected criteria.</p>
+        </div>
     @endif
-
-    @endsection
-
-    </body>
+@endsection
