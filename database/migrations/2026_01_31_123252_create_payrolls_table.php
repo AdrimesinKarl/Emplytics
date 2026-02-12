@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade'); //this belongs to employees table
+            $table->foreignId('employee_id')->constrained()->cascadeOnDelete(); //this belongs to employees table
             $table->date('pay_period_start');
             $table->date('pay_period_end');
             $table->decimal('total_hours', 8,2);
