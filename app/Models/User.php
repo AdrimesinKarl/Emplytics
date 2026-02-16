@@ -47,6 +47,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => Role::class,
         ];
     }
 
@@ -61,4 +62,17 @@ class User extends Authenticatable
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::ADMIN;
+    }
+    public function isHR(): bool{
+        return $this->role ===Role::HR;
+    }
+
+    public function isEmployee(): bool{
+        return $this->role ===Role::EMPLOYEE;
+    }
+
 }
