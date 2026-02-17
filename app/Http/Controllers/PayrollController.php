@@ -28,7 +28,6 @@ class PayrollController extends Controller
         $payrolls = Payroll::with('employee')->latest()->get();
         return view('payrolls.index', compact('payrolls'));
     }
-
     /**
      * Show the form for generating a new payroll record.
      *
