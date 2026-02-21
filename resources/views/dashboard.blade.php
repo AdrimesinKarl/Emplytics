@@ -14,4 +14,7 @@
             </div>
         </div>
     </div>
+
+    {{ dd(auth()->user()->role) }}
+    
 </x-app-layout>

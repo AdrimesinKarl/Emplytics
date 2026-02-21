@@ -19,6 +19,6 @@ Route::resource('employees',EmployeeController::class)->middleware('auth'); //th
 
 Route::resource('attendances', AttendanceController::class)->middleware('auth'); //this is the route to list all attendances
 
-Route::resource('payrolls', PayrollController::class)->middleware('auth'); //this is the route to list all payrolls
+Route::resource('payrolls', PayrollController::class)->middleware('can:access-payroll'); //this is the route to list all payrolls
 
 require __DIR__.'/auth.php';
