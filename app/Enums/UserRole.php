@@ -2,9 +2,9 @@
 
 namespace App;
 
-enum Role: string
+enum UserRole: string
 {
-    case ADMIN = 'admin';
+    case Admin = 'admin';
     case HR = 'hr';
-    case EMPLOYEE = 'employee';
+    case Employee = 'employee';
 }

@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('manage-employees', function (User $user){
-            return $user->isAdmin() || $user->isHR || $user->isEmployee();
+            return $user->isAdmin() || $user->isHR();
         });
     }
 }
