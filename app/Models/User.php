@@ -51,7 +51,6 @@ class User extends Authenticatable
             //'role' => Role::class,
         ];
     }
-
     /**
      * Get the user's initials
      */

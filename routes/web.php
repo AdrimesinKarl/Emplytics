@@ -21,4 +21,17 @@ Route::resource('attendances', AttendanceController::class)->middleware('auth');
 
 Route::resource('payrolls', PayrollController::class)->middleware('can:access-payroll'); //this is the route to list all payrolls
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/payroll', [PayrollController::class, 'index']);
+});
+
+Route::middleware(['auth', 'role:admin,hr'])->group(function () {
+    Route::get('/employees', [EmployeeController::class, 'index']);
+});
+
+Route::middleware(['auth', 'role:admin,hr'])->group(function () {
+    Route::get('/attendances', [AttendanceController::class, 'index']);
+});
+
+
 require __DIR__.'/auth.php';
