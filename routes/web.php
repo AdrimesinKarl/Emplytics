@@ -15,23 +15,21 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::resource('employees',EmployeeController::class)->middleware('auth'); //this is the route to list all employees
-
-Route::resource('attendances', AttendanceController::class)->middleware('auth'); //this is the route to list all attendances
-
-Route::resource('payrolls', PayrollController::class)->middleware('can:access-payroll'); //this is the route to list all payrolls
-
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/payroll', [PayrollController::class, 'index']);
+    Route::resource('/payroll', PayrollController::class);
 });
 
 Route::middleware(['auth', 'role:admin,hr'])->group(function () {
-    Route::get('/employees', [EmployeeController::class, 'index']);
+    Route::resource('/employees', EmployeeController::class);
+    Route::resource('/attendances', AttendanceController::class);
 });
 
-Route::middleware(['auth', 'role:admin,hr'])->group(function () {
-    Route::get('/attendances', [AttendanceController::class, 'index']);
+Route::get('/check-role', function () {
+    return [
+        'name' => auth()->user()->name,
+        'email' => auth()->user()->email,
+        'role' => auth()->user()->role,
+    ];
 });
-
 
 require __DIR__.'/auth.php';
