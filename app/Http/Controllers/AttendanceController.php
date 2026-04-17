@@ -27,7 +27,6 @@ class AttendanceController extends Controller
         
         return view('attendances.index', compact('attendances'));
     }
-
     /**
      * Show the form for recording a new attendance entry.
      *
@@ -62,7 +61,6 @@ class AttendanceController extends Controller
         return to_route('attendances.index')
             ->with('success', 'Attendance recorded successfully!');
     }
-
     /**
      * Show the form for editing a specific attendance record.
      *
@@ -75,7 +73,6 @@ class AttendanceController extends Controller
         
         return view('attendances.edit', compact('attendance', 'employees'));
     }
-
     /**
      * Update the specified attendance record.
      *
@@ -97,7 +94,6 @@ class AttendanceController extends Controller
         return to_route('attendances.index')
             ->with('success', 'Attendance updated successfully!');
     }
-
     /**
      * Remove the attendance record from the database.
      *

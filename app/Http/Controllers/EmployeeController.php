@@ -46,7 +46,7 @@ class EmployeeController extends Controller
      *
      * @return View
      */
-    public function create(): View
+     public function create(): View
     {
         return view('employees.create');
     }
@@ -87,7 +87,6 @@ class EmployeeController extends Controller
     {
         return view('employees.edit', compact('employee'));
     }
-
     /**
      * Update the specified employee in the database.
      *
@@ -112,7 +111,6 @@ class EmployeeController extends Controller
         return to_route('employees.index')
             ->with('success', 'Employee updated successfully');
     }
-
     /**
      * Remove the specified employee from the database.
      *
