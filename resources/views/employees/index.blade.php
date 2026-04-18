@@ -3,6 +3,8 @@
 @section('title', 'Employee List')
 
 @section('content')
+
+
     <div class="header-section">
         <h1>Employee List</h1>
         <x-button href="{{ route('employees.create') }}">Add New Employee</x-button>
