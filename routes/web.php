@@ -16,7 +16,7 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('/payroll', PayrollController::class);
+    Route::resource('/payrolls', PayrollController::class);
 });
 
 Route::middleware(['auth', 'role:admin,hr'])->group(function () {
