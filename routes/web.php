@@ -24,6 +24,10 @@ Route::middleware(['auth', 'role:admin,hr'])->group(function () {
     Route::resource('/attendances', AttendanceController::class);
 });
 
+Route::middleware(['auth', 'role:employee'])->group(function() {
+    Route::get('/attendances', [AttendanceController::class,'index']);
+});
+
 Route::get('/check-role', function () {
     return [
         'name' => auth()->user()->name,
