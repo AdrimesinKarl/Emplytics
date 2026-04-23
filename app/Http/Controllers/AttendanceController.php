@@ -24,6 +24,7 @@ class AttendanceController extends Controller
     {
         // Eager load the employee relationship to optimize database performance
         $attendances = Attendance::with('employee')->latest('date')->get();
+        $attendances = Attendance::where('user_id', auth()->id())->get();
         
         return view('attendances.index', compact('attendances'));
     }
@@ -106,5 +107,13 @@ class AttendanceController extends Controller
 
         return to_route('attendances.index')
             ->with('success', 'Attendance deleted successfully!');
+    }
+
+    public function show(Attendance $attendance): View{
+        $attendance = Attendance::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->firstOrFail();
+        
+        return view('attendances.show', compact('attendance'));
     }
 }

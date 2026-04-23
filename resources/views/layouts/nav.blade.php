@@ -20,10 +20,9 @@
 
                 <!-- Employee -->
                 @if(auth()->user()->role === 'employee')
-                    <li class="nav-item"><a class="nav-link" href="/my-attendance">My Attendance</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/my-payroll">My Payroll</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/attendances">My Attendance</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/payrolls">My Payroll</a></li>
                 @endif
-
                 <!-- Logout -->
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}">
@@ -32,7 +31,7 @@
                     </form>
                 </li>
             @endauth
-
+                
         </ul>
     </div>
 </nav>

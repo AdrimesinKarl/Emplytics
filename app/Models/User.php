@@ -84,5 +84,12 @@ class User extends Authenticatable
             default => 'No Access',
         });
     }
+    
+    public function attendances(){
+        return $this->hasMany(Attendance::class);
+    }
 
-}
+    public function payrolls() {
+        return $this->hasMany(Payroll::class);
+        }
+    }
