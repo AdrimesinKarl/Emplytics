@@ -25,7 +25,6 @@ class User extends Authenticatable
         'password',
         'role',
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -63,26 +62,8 @@ class User extends Authenticatable
             ->implode('');
     }
 
-    public function isAdmin(): bool
-    {
-        return $this->role === Role::ADMIN;
-    }
-    public function isHR(): bool{
-        return $this->role ===Role::HR;
-    }
-
-    public function isEmployee(): bool{
-        return $this->role ===Role::EMPLOYEE;
-    }
-
-    protected function accessLevelLabel(): Attribute
-    {
-        return Attribute::get(fn () => match ($this->role) {
-            UserRole::Admin => 'Full Access',
-            UserRole::HR => "HR access",
-            UserRole::Employee => "Employee access",
-            default => 'No Access',
-        });
+    public function employee() {
+        return $this->hasOne(Employee::class);
     }
     
     public function attendances(){

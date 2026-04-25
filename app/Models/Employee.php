@@ -31,6 +31,11 @@ class Employee extends Model
     {
         return $this->hasMany(Payroll::class);
     }
+    
+    // Link to user account
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Calculate estimated payroll for the current month.

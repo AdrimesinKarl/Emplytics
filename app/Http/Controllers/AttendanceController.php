@@ -21,13 +21,25 @@ class AttendanceController extends Controller
      * @return View
      */
     public function index(): View
-    {
-        // Eager load the employee relationship to optimize database performance
-        $attendances = Attendance::with('employee')->latest('date')->get();
-        $attendances = Attendance::where('user_id', auth()->id())->get();
-        
-        return view('attendances.index', compact('attendances'));
+{
+    $user = auth()->user();
+    
+    // If employee, only show their own attendance
+    if ($user->role === 'employee') {
+
+        $attendances = Attendance::with('employee')
+            ->where('employee_id', $user->employee->id)
+            ->latest('date')
+            ->get();
+    } else {
+        // Admin or others can see all
+        $attendances = Attendance::with('employee')
+            ->latest('date')
+            ->get();
     }
+
+    return view('attendances.index', compact('attendances'));
+}
     /**
      * Show the form for recording a new attendance entry.
      *
@@ -109,11 +121,4 @@ class AttendanceController extends Controller
             ->with('success', 'Attendance deleted successfully!');
     }
 
-    public function show(Attendance $attendance): View{
-        $attendance = Attendance::where('id', $id)
-        ->where('user_id', auth()->id())
-        ->firstOrFail();
-        
-        return view('attendances.show', compact('attendance'));
-    }
 }
