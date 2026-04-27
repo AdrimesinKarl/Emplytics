@@ -20,23 +20,15 @@ class AttendanceController extends Controller
      *
      * @return View
      */
-    public function index(): View
+public function index(): View
 {
-    $user = auth()->user();
-    
-    // If employee, only show their own attendance
-    if ($user->role === 'employee') {
+    $this->authorize('viewAny', Attendance::class);
 
-        $attendances = Attendance::with('employee')
-            ->where('employee_id', $user->employee->id)
-            ->latest('date')
-            ->get();
-    } else {
-        // Admin or others can see all
-        $attendances = Attendance::with('employee')
-            ->latest('date')
-            ->get();
-    }
+    $user = auth()->user();
+
+    $attendances = $user->role === 'employee'
+        ? Attendance::where('user_id', $user->id)->get()
+        : Attendance::all();
 
     return view('attendances.index', compact('attendances'));
 }

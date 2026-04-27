@@ -19,16 +19,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/payrolls', PayrollController::class);
 });
 
-Route::middleware(['auth', 'role:admin, hr'])->group(function () {
+Route::middleware(['auth', 'role:admin,hr'])->group(function() {
     Route::resource('/employees', EmployeeController::class);
     Route::resource('/attendances', AttendanceController::class);
-});
-
-Route::middleware(['auth', 'role:employee'])->group(function() {
-    Route::get('/attendances', [AttendanceController::class, 'index'])
-    ->name('attendances.index');
-    Route::get('/payrolls', [PayrollController::class, 'index'])
-    ->name('payrolls.index');
 });
 
 Route::get('/check-role', function () {

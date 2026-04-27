@@ -25,7 +25,7 @@ class PayrollController extends Controller
      */
     public function index(): View
     {
-        $payrolls = Payroll::where('user_id', auth()->id())->latest()->get();
+        $payrolls = Payroll::where('employee_id', auth()->id())->latest()->get();
 
         return view('payrolls.index', compact('payrolls'));
     }
@@ -103,7 +103,6 @@ class PayrollController extends Controller
 
         return to_route('payrolls.index')->with('success', 'Payroll generated successfully');
     }
-
     /**
      * Show the form for editing an existing payroll record.
      *
