@@ -22,21 +22,28 @@ class AttendanceController extends Controller
      */
 public function index(): View
 {
-    $this->authorize('viewAny', Attendance::class);
-
     $user = auth()->user();
 
     $attendances = $user->role === 'employee'
-        ? Attendance::where('user_id', $user->id)->get()
-        : Attendance::all();
+        ? $user->attendances()->latest()->get()
+        : Attendance::latest()->get();
 
     return view('attendances.index', compact('attendances'));
+
+    
 }
-    /**
+/**
      * Show the form for recording a new attendance entry.
      *
      * @return View
      */
+
+    public function show(Attendance $attendance): View
+    {
+        $this->authorize('view' , $attendance);
+
+        return view('attendance.show' , compact('attendance'));
+    }
     public function create(): View
     {
         // Fetch employees to populate the selection dropdown
@@ -44,7 +51,6 @@ public function index(): View
         
         return view('attendances.create', compact('employees'));
     }
-
     /**
      * Store a newly created attendance record.
      *

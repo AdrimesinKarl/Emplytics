@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use Symfony\Component\CssSelector\Node\AttributeNode;
+use App\Models\Attendance;
 
 class AttendancePolicy
 {
@@ -14,13 +15,22 @@ class AttendancePolicy
     {
         return in_array($user->role, ['admin', 'hr', 'employee']);
     }
-
-    public function view(User $user, Attendance $attendance)
+    public function view(User $user, Attendance $attendance): bool
     {
-        return $user->role === 'admin'
-        || $user->role === 'hr'
+    return in_array($user->role, ['admin', 'hr'])
         || $user->id === $attendance->employee_id;
     }
+
+    public function update(User $user, Attendance $attendance): bool
+    {
+        return in_array($user->role, ['admin', 'hr']);
+    }
+
+    public function delete(User $user, Attendance $attendance): bool
+    {
+        return in_array($user->role, ['admin', 'hr']);
+    }
+
 }
 
 
