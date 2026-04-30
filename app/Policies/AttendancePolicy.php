@@ -11,6 +11,11 @@ class AttendancePolicy
     /**
      * Create a new policy instance.
      */
+
+    public function create(User $user): bool
+    {
+        return in_array($user->role, ['admin', 'hr']);
+    }
     public function viewAny(User $user)
     {
         return in_array($user->role, ['admin', 'hr', 'employee']);

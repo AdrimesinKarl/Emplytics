@@ -42,7 +42,7 @@ public function index(): View
     {
         $this->authorize('view' , $attendance);
 
-        return view('attendance.show' , compact('attendance'));
+        return view('attendances.show' , compact('attendance'));
     }
     public function create(): View
     {

@@ -3,9 +3,12 @@
 @section('title', 'Attendance List')
 
 @section('content')
+
     <div class="header-section">
         <h1>Attendance List</h1>
+        @can('create', App\Models\Attendance::class)
         <x-button href="{{ route('attendances.create') }}">Record New Attendance</x-button>
+        @endcan
     </div>
 
     {{-- Filter Section --}}

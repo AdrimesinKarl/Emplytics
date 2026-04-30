@@ -46,7 +46,7 @@ class EmployeeController extends Controller
      *
      * @return View
      */
-     public function create(): View
+        public function create(): View
     {
         return view('employees.create');
     }
@@ -69,8 +69,10 @@ class EmployeeController extends Controller
             'hourly_rate' => ['required', 'numeric', 'min:0'],
         ]);
 
-        // Mass-assign validated data to create the record
-        Employee::create($validated);
+        Employee::create([
+            ...$validated,
+            'user_id' => auth()->id(),
+        ]);
 
         // Redirect with a success notification
         return to_route('employees.index')
