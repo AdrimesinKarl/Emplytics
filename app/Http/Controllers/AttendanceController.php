@@ -22,6 +22,7 @@ class AttendanceController extends Controller
      */
 public function index(): View
 {
+    //Employees can only see their own records. Admins/HR get everything.
     $user = auth()->user();
 
     $attendances = $user->role === 'employee'
@@ -40,6 +41,7 @@ public function index(): View
 
     public function show(Attendance $attendance): View
     {
+        //will block employees from viewing records that aren't theirs
         $this->authorize('view' , $attendance);
 
         return view('attendances.show' , compact('attendance'));

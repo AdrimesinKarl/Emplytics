@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Models\Employee;
+use App\Models\Attendance;
+use App\Models\Payroll;
 
 class User extends Authenticatable
 {
@@ -65,10 +68,8 @@ class User extends Authenticatable
     public function employee() {
         return $this->hasOne(Employee::class);
     }
-    
-
     public function attendances(){
-        return $this->hasMany(App\Models\Attendances::class);
+        return $this->hasMany(Attendance::class);
     }
 
     public function payrolls() {

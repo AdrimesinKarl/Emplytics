@@ -24,9 +24,16 @@ Route::middleware(['auth', 'role:admin,hr'])->group(function() {
     Route::resource('/attendances', AttendanceController::class);
 });
 
-Route::get('/attendances/{attendance}', [AttendanceController::class, 'show'])
-    ->middleware(['auth'])
-    ->name('attendances.index');
+// Read — any authenticated user (policy handles ownership)
+Route::middleware(['auth'])->group(function () {
+    Route::resource('/attendances', AttendanceController::class)
+        ->only(['index', 'show']);
+});
+
+Route::middleware(['auth'])->group(function() {
+    Route::resource('/payrolls', PayrollController::class)
+        ->only(['index', 'show']);
+});
 
 Route::get('/check-role', function () {
     return [
@@ -34,6 +41,6 @@ Route::get('/check-role', function () {
         'email' => auth()->user()->email,
         'role' => auth()->user()->role,
     ];
-});
+    });
 
 require __DIR__.'/auth.php';

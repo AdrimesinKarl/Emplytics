@@ -23,23 +23,21 @@ class PayrollController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function index()
     {
-        $payrolls = Payroll::where('employee_id', auth()->id())->latest()->get();
+    $user = auth()->user();
 
-        return view('payrolls.index', compact('payrolls'));
+    $payrolls = $user->role === 'employee'
+        ? Payroll::where('employee_id', $user->id)->latest()->get()
+        : Payroll::latest()->get();
+
+    return view('payrolls.index', compact('payrolls'));
     }
-    /**
-     * Show the form for generating a new payroll record.
-     *
-     * @return View
-     */
     public function create(): View
     {
         $employees = Employee::all();
         return view('payrolls.create', compact('employees'));
     }
-
     /**
      * Store a newly generated payroll in the database.
      * * Logic:
