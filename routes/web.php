@@ -4,35 +4,32 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PayrollController;
-
+use App\Http\Controllers\DashboardController;
 Route::view('/', 'welcome');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// routes/web.php
 
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
-
+// Admin only
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('/payrolls', PayrollController::class);
+    Route::resource('users', UserController::class);
 });
 
-Route::middleware(['auth', 'role:admin,hr'])->group(function() {
-    Route::resource('/employees', EmployeeController::class);
-    Route::resource('/attendances', AttendanceController::class);
+// Admin + HR
+Route::middleware(['auth', 'role:admin,hr'])->group(function () {
+    Route::resource('employees', EmployeeController::class);
+    Route::resource('attendances', AttendanceController::class);
+    Route::resource('payrolls', PayrollController::class);
 });
 
-// Read — any authenticated user (policy handles ownership)
+// Employee only
+Route::middleware(['auth', 'role:employee'])->group(function () {
+    Route::get('my-attendance', [AttendanceController::class, 'myAttendance'])->name('attendance.mine');
+    Route::get('my-payroll', [PayrollController::class, 'myPayroll'])->name('payroll.mine');
+});
+
+// All authenticated users
 Route::middleware(['auth'])->group(function () {
-    Route::resource('/attendances', AttendanceController::class)
-        ->only(['index', 'show']);
-});
-
-Route::middleware(['auth'])->group(function() {
-    Route::resource('/payrolls', PayrollController::class)
-        ->only(['index', 'show']);
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::get('/check-role', function () {

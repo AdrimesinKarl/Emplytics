@@ -68,12 +68,7 @@ class EmployeeController extends Controller
             'position'    => ['required', 'string', 'max:255'],
             'hourly_rate' => ['required', 'numeric', 'min:0'],
         ]);
-
-        Employee::create([
-            ...$validated,
-            'user_id' => auth()->id(),
-        ]);
-
+        
         // Redirect with a success notification
         return to_route('employees.index')
             ->with('success', 'Employee created successfully!');

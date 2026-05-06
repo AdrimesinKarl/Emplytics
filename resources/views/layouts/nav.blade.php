@@ -4,34 +4,33 @@
 
         <ul class="navbar-nav ms-auto">
 
-            @auth
-                <!-- Admin -->
-                @if(auth()->user()->role === 'admin')
-                    <li class="nav-item"><a class="nav-link" href="/employees">Employees</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/attendances">Attendance</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/payrolls">Payroll</a></li>
-                @endif
+@auth
+    {{-- Visible to all --}}
+    <a href="{{ route('dashboard') }}">Dashboard</a>
 
-                <!-- HR -->
-                @if(auth()->user()->role === 'hr')
-                    <li class="nav-item"><a class="nav-link" href="/employees">Employees</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/attendances">Attendance</a></li>
-                @endif
+    {{-- Admin + HR only --}}
+    @if(in_array(auth()->user()->role, ['admin', 'hr']))
+        <a href="{{ route('employees.index') }}">Employees</a>
+        <a href="{{ route('attendances.index') }}">Attendance</a>
+        <a href="{{ route('payrolls.index') }}">Payroll</a>
+    @endif
 
-                <!-- Employee -->
-                @if(auth()->user()->role === 'employee')
-                    <li class="nav-item"><a class="nav-link" href="/attendances">My Attendance</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/payrolls">My Payroll</a></li>
-                @endif
-                <!-- Logout -->
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button class="btn btn-link nav-link">Logout</button>
-                    </form>
-                </li>
-            @endauth
-                
+    {{-- Admin only --}}
+    @if(auth()->user()->role === 'admin')
+        <a href="{{ route('users.index') }}">Users</a>
+    @endif
+
+    {{-- Employee only --}}
+    @if(auth()->user()->role === 'employee')
+        <a href="{{ route('attendance.mine') }}">My Attendance</a>
+        <a href="{{ route('payroll.mine') }}">My Payroll</a>
+    @endif
+
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
+@endauth
         </ul>
     </div>
 </nav>
