@@ -7,7 +7,6 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-
 /**
  * Handles the recording and management of employee daily attendance.
  * Tracks check-in/check-out times and links them to specific dates and employees.
@@ -20,8 +19,13 @@ class AttendanceController extends Controller
      *
      * @return View
      */
-public function index(): View
+public function index(Request $request): View
 {
+    $query = Attendance::query();
+
+    if ($request->filled('date')) {
+        $query->whereDate('created_at', $request->date);
+    }
     //Employees can only see their own records. Admins/HR get everything.
     $user = auth()->user();
 
@@ -31,7 +35,6 @@ public function index(): View
 
     return view('attendances.index', compact('attendances'));
 
-    
 }
 /**
      * Show the form for recording a new attendance entry.

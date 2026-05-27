@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email')->unique();
             $table->string('position');
             $table->decimal('hourly_rate', 8, 2);
             $table->timestamps();

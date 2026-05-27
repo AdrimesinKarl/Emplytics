@@ -13,6 +13,7 @@ class Employee extends Model
 
     // Fields that can be filled using the form
     protected $fillable = [
+        'user_id',
         'first_name',
         'last_name',
         'email',

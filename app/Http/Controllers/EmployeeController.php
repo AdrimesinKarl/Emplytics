@@ -68,7 +68,16 @@ class EmployeeController extends Controller
             'position'    => ['required', 'string', 'max:255'],
             'hourly_rate' => ['required', 'numeric', 'min:0'],
         ]);
-        
+
+        // Create a new employee record using the validated data
+        Employee::create([
+        'user_id' => auth()->id(),
+        'first_name' => $request->first_name,
+        'last_name' => $request->last_name,
+        'email' => $request->email,
+        'position' => $request->position,
+        'hourly_rate' => $request->hourly_rate,
+    ]);
         // Redirect with a success notification
         return to_route('employees.index')
             ->with('success', 'Employee created successfully!');
