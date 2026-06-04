@@ -29,8 +29,8 @@ public function index(Request $request): View
         : Attendance::query();
 
     // Apply date filter
-    if ($request->filled('date')) {
-        $query->whereDate('created_at', $request->date);
+    if ($request->filled('attendance_date')) {
+        $query->whereDate('attendance_date', $request->attendance_date);
     }
 
     // Execute query
@@ -102,9 +102,9 @@ public function index(Request $request): View
     {
         $validated = $request->validate([
             'employee_id' => ['required', 'exists:employees,id'],
-            'date'        => ['required', 'date'],
-            'check_in'    => ['nullable', 'date_format:H:i'],
-            'check_out'   => ['nullable', 'date_format:H:i'],
+            'date' => ['required', 'date'],
+            'check_in' => ['nullable', 'date_format:H:i'],
+            'check_out' => ['nullable', 'date_format:H:i'],
         ]);
 
         $attendance->update($validated);

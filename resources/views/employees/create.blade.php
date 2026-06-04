@@ -24,15 +24,7 @@
                 value="{{ old('last_name') }}" required>
             @error('last_name') <span class="error-message">{{ $message }}</span> @enderror
         </div>
-
-        {{-- Email Address --}}
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email"
-                value="{{ old('email') }}" required>
-            @error('email') <span class="error-message">{{ $message }}</span> @enderror
-        </div>
-
+        
         {{-- Job Position --}}
         <div class="form-group">
             <label for="position">Position</label>

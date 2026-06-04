@@ -64,7 +64,6 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'first_name'  => ['required', 'string', 'max:255'],
             'last_name'   => ['required', 'string', 'max:255'],
-            'email'       => ['required', 'email', 'unique:employees,email'],
             'position'    => ['required', 'string', 'max:255'],
             'hourly_rate' => ['required', 'numeric', 'min:0'],
         ]);
@@ -74,7 +73,6 @@ class EmployeeController extends Controller
         'user_id' => auth()->id(),
         'first_name' => $request->first_name,
         'last_name' => $request->last_name,
-        'email' => $request->email,
         'position' => $request->position,
         'hourly_rate' => $request->hourly_rate,
     ]);
@@ -106,7 +104,6 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'first_name'  => ['required', 'string', 'max:255'],
             'last_name'   => ['required', 'string', 'max:255'],
-            'email'       => ['required', 'email', "unique:employees,email,{$employee->id}"],
             'position'    => ['required', 'string', 'max:255'],
             'hourly_rate' => ['required', 'numeric', 'min:0'],
         ]);

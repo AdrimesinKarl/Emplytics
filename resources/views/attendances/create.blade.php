@@ -23,8 +23,8 @@
 
             {{-- Attendance Date --}}
             <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date" value="{{ old('date', date('Y-m-d')) }}" required>
+                <label for="attendance_date">Date</label>
+                <input type="date" id="attendance_date" name="attendance_date" value="{{ old('attendance_date', date('Y-m-d')) }}" required>
                 @error('date') <p class="error-text">{{ $message }}</p> @enderror
             </div>
 

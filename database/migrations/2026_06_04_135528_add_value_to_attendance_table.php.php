@@ -11,9 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('attendances', function (Blueprint $table) {
-            $table->date('attendance_date')->nullable();
-        });
+        //
     }
 
     /**
@@ -21,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-       //
+        //
     }
 };

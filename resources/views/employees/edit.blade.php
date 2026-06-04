@@ -26,14 +26,6 @@
             @error('last_name') <span class="error-text">{{ $message }}</span> @enderror
         </div>
 
-        {{-- Email --}}
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email"
-                value="{{ old('email', $employee->email) }}" required>
-            @error('email') <span class="error-text">{{ $message }}</span> @enderror
-        </div>
-
         {{-- Position --}}
         <div class="form-group">
             <label for="position">Position</label>

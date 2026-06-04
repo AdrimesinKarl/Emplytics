@@ -33,7 +33,6 @@
                     <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Email</th>
                         <th>Position</th>
                         <th>Hourly Rate</th>
                         <th>Actions</th>
@@ -44,7 +43,6 @@
                         <tr>
                             <td>{{ $employee->first_name }}</td>
                             <td>{{ $employee->last_name }}</td>
-                            <td>{{ $employee->email }}</td>
                             <td>{{ $employee->position }}</td>
                             <td>${{ number_format($employee->hourly_rate, 2) }}</td>
                             <td>

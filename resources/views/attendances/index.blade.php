@@ -42,9 +42,9 @@
                         <tr>
                             {{-- Accessing the related employee model --}}
                             <td>{{ $attendance->employee->first_name }} {{ $attendance->employee->last_name }}</td>
-                            
+
                             {{-- Formatting dates and times via Carbon --}}
-                            <td>{{ $attendance->date->format('M d, Y') }}</td>
+                            <td>{{ $attendance->attendance_date?->format('M d, Y') }}</td>
                             <td>{{ $attendance->check_in ? $attendance->check_in->format('h:i A') : '--' }}</td>
                             <td>{{ $attendance->check_out ? $attendance->check_out->format('h:i A') : '--' }}</td>
                             
@@ -53,6 +53,7 @@
                             
                             <td>
                                 <a href="{{ route('attendances.edit', $attendance) }}">Edit</a>
+                                
                                 {{-- Simple Delete Form --}}
                                 <form action="{{ route('attendances.destroy', $attendance) }}" method="POST" style="display:inline">
                                     @csrf
