@@ -21,20 +21,22 @@ class AttendanceController extends Controller
      */
 public function index(Request $request): View
 {
-    $query = Attendance::query();
+    $user = auth()->user();
 
+    // Base query
+    $query = $user->role === 'employee'
+        ? $user->attendances()
+        : Attendance::query();
+
+    // Apply date filter
     if ($request->filled('date')) {
         $query->whereDate('created_at', $request->date);
     }
-    //Employees can only see their own records. Admins/HR get everything.
-    $user = auth()->user();
 
-    $attendances = $user->role === 'employee'
-        ? $user->attendances()->latest()->get()
-        : Attendance::latest()->get();
+    // Execute query
+    $attendances = $query->latest()->get();
 
     return view('attendances.index', compact('attendances'));
-
 }
 /**
      * Show the form for recording a new attendance entry.

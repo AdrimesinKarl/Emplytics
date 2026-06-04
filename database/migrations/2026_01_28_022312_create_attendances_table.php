@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table){
             $table->id(); // Primary key
             $table->foreignId('employee_id')->constrained()->cascadeOnDelete(); // link to employees table
-            $table->date('date');
+            $table->date('attendance_date');
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
             $table->timestamps();
