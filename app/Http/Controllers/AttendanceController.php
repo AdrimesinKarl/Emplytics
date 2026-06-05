@@ -29,8 +29,8 @@ public function index(Request $request): View
         : Attendance::query();
 
     // Apply date filter
-    if ($request->filled('attendance_date')) {
-        $query->whereDate('attendance_date', $request->attendance_date);
+    if ($request->filled('date')) {
+        $query->whereDate('date', $request->date);
     }
 
     // Execute query

@@ -44,7 +44,7 @@
                             <td>{{ $attendance->employee->first_name }} {{ $attendance->employee->last_name }}</td>
 
                             {{-- Formatting dates and times via Carbon --}}
-                            <td>{{ $attendance->attendance_date?->format('M d, Y') }}</td>
+                            <td>{{ $attendance->date?->format('M d, Y') }}</td>
                             <td>{{ $attendance->check_in ? $attendance->check_in->format('h:i A') : '--' }}</td>
                             <td>{{ $attendance->check_out ? $attendance->check_out->format('h:i A') : '--' }}</td>
                             

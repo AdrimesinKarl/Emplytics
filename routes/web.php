@@ -26,10 +26,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('payrolls', PayrollController::class);
 });
 
+Route::middleware(['auth', 'role:hr'])->prefix('hr')->group(function () {
+    Route::resource('employees', EmployeeController::class);
+    Route::resource('attendances', AttendanceController::class);
+    Route::resource('payrolls', PayrollController::class);
+});
+
 Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::get('/my-attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/my-attendance/{attendance}', [AttendanceController::class, 'show'])->name('attendance.show');
 });
-
 
 require __DIR__.'/auth.php';
