@@ -20,13 +20,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::resource('attendances', AttendanceController::class);
     Route::resource('payrolls', PayrollController::class);
 });
 
-Route::middleware(['auth', 'role:hr'])->prefix('hr')->group(function () {
+Route::middleware(['auth', 'role:hr'])->prefix('hr')->name('hr.')->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::resource('attendances', AttendanceController::class);
     Route::resource('payrolls', PayrollController::class);

@@ -4,15 +4,17 @@
 
 @section('content')
 
+@php $prefix = auth()->user()->role . '.'; @endphp
+
 
     <div class="header-section">
         <h1>Employee List</h1>
-        <x-button href="{{ route('employees.create') }}">Add New Employee</x-button>
+        <x-button href="{{ route($prefix . 'employees.create') }}">Add New Employee</x-button>
     </div>
 
     {{-- Search and Filter Section --}}
     <div class="search-bar">
-        <form action="{{ route('employees.index') }}" method="GET">
+        <form action="{{ route($prefix . 'employees.index') }}" method="GET">
             <input type="text"
                 name="search"
                 placeholder="Search name or position..."
@@ -20,7 +22,7 @@
             <x-button type="submit">Search</x-button>
             
             @if(request('search'))
-                <a href="{{ route('employees.index') }}" class="btn-link">Clear</a>
+                <a href="{{ route($prefix . 'employees.index') }}" class="btn-link">Clear</a>
             @endif
         </form>
     </div>
@@ -48,13 +50,13 @@
                             <td>
                                 <div class="action-buttons">
                                     {{-- Edit Link --}}
-                                    <x-button href="{{ route('employees.edit', $employee) }}" type="secondary">
+                                    <x-button href="{{ route($prefix . 'employees.edit', $employee) }}" type="secondary">
                                         Edit
                                     </x-button>
 
                                     {{-- Delete Form --}}
                                     <form method="POST"
-                                        action="{{ route('employees.destroy', $employee) }}"
+                                        action="{{ route($prefix . 'employees.destroy', $employee) }}"
                                         onsubmit="return confirm('Are you sure you want to delete this employee?')"
                                         style="display:inline;">
                                         @csrf

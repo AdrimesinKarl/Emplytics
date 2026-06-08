@@ -3,10 +3,14 @@
 @section('title', 'Edit Employee')
 
 @section('content')
+
+@php $prefix = auth()->user()->role . '.'; @endphp
+
 <div class="container">
+
     <h1>Edit Employee: {{ $employee->first_name }} {{ $employee->last_name }}</h1>
 
-    <form action="{{ route('employees.update', $employee) }}" method="POST">
+    <form action="{{ route($prefix . 'employees.update', $employee) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -44,7 +48,7 @@
 
         <div class="form-actions">
             <x-button type="submit">Update Employee</x-button>
-            <x-button href="{{ route('employees.index') }}" type="secondary">Cancel</x-button>
+            <x-button href="{{ route($prefix . 'employees.index') }}" type="secondary">Cancel</x-button>
         </div>
     </form>
 </div>

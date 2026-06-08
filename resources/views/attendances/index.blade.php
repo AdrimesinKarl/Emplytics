@@ -4,21 +4,27 @@
 
 @section('content')
 
+@php $prefix = auth()->user()->role . '.'; @endphp
+
+    <div class="container">
+        <h1>Record Attendance</h1>
+        
+        <form action="{{ route($prefix . 'attendances.store') }}" method="POST"></form></form>
     <div class="header-section">
         <h1>Attendance List</h1>
         @can('create', App\Models\Attendance::class)
-        <x-button href="{{ route('attendances.create') }}">Record New Attendance</x-button>
+        <x-button href="{{route($prefix . 'attendances.create') }}">Record New Attendance</x-button>
         @endcan
     </div>
 
     {{-- Filter Section --}}
     <div class="filter-card">
-        <form action="{{ route('attendances.index') }}" method="GET">
+        <form action="{{ route($prefix .'attendances.index') }}" method="GET">
             <label for="date">Filter by Date:</label>
             <input type="date" id="date" name="date" value="{{ request('date') }}">
             <x-button type="submit" type="secondary">Apply Filter</x-button>
             @if(request('date'))
-                <a href="{{ route('attendances.index') }}" class="btn-link">Clear Filter</a>
+                <a href="{{ route($prefix .'attendances.index') }}" class="btn-link">Clear Filter</a>
             @endif
         </form>
     </div>
@@ -52,10 +58,10 @@
                             <td><strong>{{ number_format($attendance->hours_worked, 2) }} hrs</strong></td>
                             
                             <td>
-                                <a href="{{ route('attendances.edit', $attendance) }}">Edit</a>
+                                <a href="{{ route($prefix .'attendances.edit', $attendance) }}">Edit</a>
                                 
                                 {{-- Simple Delete Form --}}
-                                <form action="{{ route('attendances.destroy', $attendance) }}" method="POST" style="display:inline">
+                                <form action="{{ route($prefix .'attendances.destroy', $attendance) }}" method="POST" style="display:inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" onclick="return confirm('Delete this record?')">Delete</button>

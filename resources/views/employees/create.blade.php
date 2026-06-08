@@ -3,10 +3,13 @@
 @section('title', 'Create Employee')
 
 @section('content')
+
+@php $prefix = auth()->user()->role . '.'; @endphp
+
 <div class="container">
     <h1>Create New Employee</h1>
     
-    <form action="{{ route('employees.store') }}" method="POST">
+    <form action="{{ route($prefix . 'employees.store') }}" method="POST">
         @csrf
 
         {{-- First Name --}}
@@ -18,7 +21,7 @@
         </div>
 
         {{-- Last Name --}}
-        <div class="form-group">
+        <div class="form-group">`
             <label for="last_name">Last Name</label>
             <input type="text" id="last_name" name="last_name"
                 value="{{ old('last_name') }}" required>
@@ -43,7 +46,7 @@
 
         <div class="form-actions">
             <x-button type="submit">Create Employee</x-button>
-            <x-button href="{{ route('employees.index') }}" type="secondary">Cancel</x-button>
+            <x-button href="{{ route($prefix . 'employees.index') }}" type="secondary">Cancel</x-button>
         </div>
     </form>
 

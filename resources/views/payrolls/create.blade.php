@@ -3,6 +3,9 @@
 @section('title', 'Generate Payroll')
 
 @section('content')
+
+@php $prefix = auth()->user()->role . '.'; @endphp
+
 <div class="container">
     <h1>Generate Payroll</h1>
 
@@ -17,10 +20,10 @@
 
     @if($employees->isEmpty())
         <div class="empty-state">
-            <p>No employees found. Please <a href="{{ route('employees.create') }}">add an employee</a> first.</p>
+            <p>No employees found. Please <a href="{{ route($prefix . 'employees.create') }}">add an employee</a> first.</p>
         </div>
     @else
-        <form action="{{ route('payrolls.store') }}" method="POST" class="payroll-form">
+        <form action="{{ route($prefix . 'payrolls.store') }}" method="POST" class="payroll-form">
             @csrf
 
             {{-- Employee Selection --}}
@@ -62,7 +65,7 @@
 
             <div class="form-actions">
                 <x-button type="submit">Generate Payroll Record</x-button>
-                <x-button href="{{ route('payrolls.index') }}" type="secondary">Cancel</x-button>
+                <x-button href="{{ route($prefix . 'payrolls.index') }}" type="secondary">Cancel</x-button>
             </div>
         </form>
     @endif

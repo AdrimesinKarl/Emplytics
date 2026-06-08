@@ -4,9 +4,16 @@
 
 @section('content')
 
+
+@php $prefix = auth()->user()->role . '.'; @endphp
+
+    <div class="container">
+        <h1>Record Attendance</h1>
+        
+        <form action="{{ route($prefix . 'attendances.store') }}" method="POST"></form>
     <div class="header-section">
         <h1>Attendance Details</h1>
-        <x-button href="{{ route('attendances.index') }}">Back to List</x-button>
+        <x-button href="{{$prefix . route('attendances.index') }}">Back to List</x-button>
     </div>
 
     <div class="details-card">

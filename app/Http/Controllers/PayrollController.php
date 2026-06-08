@@ -17,12 +17,11 @@ use Illuminate\Support\Carbon;
  */
 class PayrollController extends Controller
 {
-    /**
-     * Display a listing of all generated payrolls.
-     * Uses Eager Loading ('with') to prevent N+1 query issues.
-     *
-     * @return View
-     */
+    private function getPrefix()
+    {
+        return auth()->user()->role . '.';
+    }
+    
     public function index()
     {
     $user = auth()->user();
@@ -99,7 +98,9 @@ class PayrollController extends Controller
             'generated_at' => now(),
         ]);
 
-        return to_route('payrolls.index')->with('success', 'Payroll generated successfully');
+        $prefix = $this->getPrefix();
+
+        return redirect()->route($prefix . 'payrolls.index')->with('success', 'Payroll generated successfully');
     }
     /**
      * Show the form for editing an existing payroll record.
@@ -132,7 +133,9 @@ class PayrollController extends Controller
 
         $payroll->update($validated);
 
-        return to_route('payrolls.index')->with('success', 'Payroll updated successfully');
+        $prefix = $this->getPrefix();
+
+        return redirect()->route($prefix . 'payrolls.index')->with('success', 'Payroll updated successfully');
     }
 
     /**
@@ -144,6 +147,8 @@ class PayrollController extends Controller
     public function destroy(Payroll $payroll): RedirectResponse
     {
         $payroll->delete();
-        return to_route('payrolls.index')->with('success', 'Payroll deleted successfully!');
+        $prefix = $this->getPrefix();
+
+        return redirect()->route($prefix . 'payrolls.index')->with('success', 'Payroll deleted successfully!');
     }
 }

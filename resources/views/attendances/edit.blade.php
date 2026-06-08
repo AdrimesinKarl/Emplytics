@@ -1,4 +1,6 @@
-<form method="POST" action="{{ route('attendances.update', $attendance) }}">
+@php $prefix = auth()->user()->role . '.'; @endphp
+
+<form method="POST" action="{{ route($prefix . 'attendances.update', $attendance) }}">
     @csrf
     @method('PUT')
 
@@ -20,8 +22,7 @@
             <x-text-input id="date" name="date" type="date" class="mt-1 block w-full" :value="old('date', $attendance->date?->format('Y-m-d'))" required />
             <x-input-error :messages="$errors->get('date')" class="mt-2" />
         </div>
-        
-        </div>
+    </div>
 
     <div class="flex items-center justify-end mt-4">
         <x-primary-button>

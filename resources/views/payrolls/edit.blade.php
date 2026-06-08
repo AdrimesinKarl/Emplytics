@@ -1,7 +1,9 @@
+@php $prefix = auth()->user()->role . '.'; @endphp
+
 <h1>Edit Payroll</h1>
 
 <div class="container">
-    <form action="{{ route('payrolls.update', $payroll->id) }}" method="POST">
+    <form action="{{ route($prefix . 'payrolls.update', $payroll->id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -67,7 +69,7 @@
 
         <div class="actions">
             <x-button type="success">Update Payroll</x-button>
-            <x-button href="{{ route('payrolls.index') }}" type="secondary">Back</x-button>
+            <x-button href="{{ route($prefix . 'payrolls.index') }}" type="secondary">Back</x-button>
         </div>
     </form>
 </div>

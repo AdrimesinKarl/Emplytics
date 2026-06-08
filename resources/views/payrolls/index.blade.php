@@ -3,9 +3,12 @@
 @section('title', 'Payroll Records')
 
 @section('content')
+
+@php $prefix = auth()->user()->role . '.'; @endphp
+
     <div class="header-section">
         <h1>Payroll List</h1>
-        <x-button href="{{ route('payrolls.create') }}">Generate New Payroll</x-button>
+        <x-button href="{{ route($prefix . 'payrolls.create') }}">Generate New Payroll</x-button>
     </div>
 
     {{-- Success Message Display --}}
@@ -50,12 +53,12 @@
                             {{-- Action column fixed inside the <tr> --}}
                             <td>
                                 <div class="action-group" style="display: flex; gap: 5px;">
-                                    <x-button href="{{ route('payrolls.edit', $payroll) }}" type="secondary">
+                                    <x-button href="{{ route($prefix . 'payrolls.edit', $payroll) }}" type="secondary">
                                         Edit
                                     </x-button>
 
                                     <form method="POST"
-                                        action="{{ route('payrolls.destroy', $payroll) }}"
+                                        action="{{ route($prefix . 'payrolls.destroy', $payroll) }}"
                                         onsubmit="return confirm('Delete this record permanently?')">
                                         @csrf
                                         @method('DELETE')
@@ -70,7 +73,7 @@
         </div>
     @else
         <div class="empty-state">
-            <p>No payroll records found. <a href="{{ route('payrolls.create') }}">Create the first one here.</a></p>
+            <p>No payroll records found. <a href="{{ route($prefix . 'payrolls.create') }}">Create the first one here.</a></p>
         </div>
     @endif
 @endsection

@@ -13,12 +13,11 @@ use Illuminate\View\View;
  */
 class AttendanceController extends Controller
 {
-    /**
-     * Display a listing of attendance records.
-     * Uses eager loading ('with') to fetch employee details in a single query.
-     *
-     * @return View
-     */
+    private function getPrefix()
+    {
+        return auth()->user()->role . '.';
+    }
+    
 public function index(Request $request): View
 {
     $user = auth()->user();
@@ -55,7 +54,8 @@ public function index(Request $request): View
     {
         // Fetch employees to populate the selection dropdown
         $employees = Employee::orderBy('last_name')->get();
-        
+        $prefix = $this->getPrefix();
+
         return view('attendances.create', compact('employees'));
     }
     /**
@@ -76,7 +76,9 @@ public function index(Request $request): View
 
         Attendance::create($validated);
 
-        return to_route('attendances.index')
+        $prefix = $this->getPrefix();
+
+        return redirect()->route($prefix . 'attendances.index')
             ->with('success', 'Attendance recorded successfully!');
     }
     /**
@@ -109,7 +111,9 @@ public function index(Request $request): View
 
         $attendance->update($validated);
 
-        return to_route('attendances.index')
+        $prefix = $this->getPrefix();
+
+        return redirect()->route($prefix . 'attendances.index')
             ->with('success', 'Attendance updated successfully!');
     }
     /**
@@ -122,7 +126,9 @@ public function index(Request $request): View
     {
         $attendance->delete();
 
-        return to_route('attendances.index')
+        $prefix = $this->getPrefix();
+
+        return redirect()->route($prefix . 'attendances.index')
             ->with('success', 'Attendance deleted successfully!');
     }
 

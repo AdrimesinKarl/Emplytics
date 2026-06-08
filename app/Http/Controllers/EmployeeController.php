@@ -13,14 +13,13 @@ use Illuminate\View\View;
  */
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of employees.
-     * * Filters the collection if a 'search' query is present in the request.
-     * Searches across first name, last name, and position.
-     *
-     * @param Request $request
-     * @return View
-     */
+    private function getPrefix()
+    {
+        return auth()->user()->role . '.';
+    }
+    //@param Request $request
+    //@return View
+    
     public function index(Request $request): View
     {
         $employees = Employee::query()
@@ -32,6 +31,7 @@ class EmployeeController extends Controller
                 $query->where(function ($q) use ($search) {
                     $q->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"])
                     ->orWhere('position', 'like', "%{$search}%");
                 });
             })
@@ -48,6 +48,8 @@ class EmployeeController extends Controller
      */
         public function create(): View
     {
+        $prefix = $this->getPrefix();
+
         return view('employees.create');
     }
 
@@ -76,8 +78,10 @@ class EmployeeController extends Controller
         'position' => $request->position,
         'hourly_rate' => $request->hourly_rate,
     ]);
+        $prefix = $this->getPrefix();
+
         // Redirect with a success notification
-        return to_route('employees.index')
+        return redirect()->route($prefix . 'employees.index')
             ->with('success', 'Employee created successfully!');
     }
 
@@ -111,7 +115,9 @@ class EmployeeController extends Controller
         // Update the model instance with validated data
         $employee->update($validated);
 
-        return to_route('employees.index')
+        $prefix = $this->getPrefix();
+
+        return redirect()->route($prefix . 'employees.index')
             ->with('success', 'Employee updated successfully');
     }
     /**
@@ -125,7 +131,9 @@ class EmployeeController extends Controller
         // Delete the record from the database
         $employee->delete();
 
-        return to_route('employees.index')
+        $prefix = $this->getPrefix();
+
+        return redirect()->route($prefix . 'employees.index')
             ->with('success', 'Employee deleted successfully');
     }
 }

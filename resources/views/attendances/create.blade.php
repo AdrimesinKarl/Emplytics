@@ -1,10 +1,13 @@
 @extends('components.layouts.app')
 
 @section('content')
+
+@php $prefix = auth()->user()->role . '.'; @endphp
+
     <div class="container">
         <h1>Record Attendance</h1>
         
-        <form action="{{ route('attendances.store') }}" method="POST">
+        <form action="{{ route($prefix . 'attendances.store') }}" method="POST">
             @csrf
 
             {{-- Employee Selection --}}
@@ -44,7 +47,7 @@
             {{-- Submission Actions --}}
             <div class="form-actions">
                 <x-button type="submit">Record Attendance</x-button>
-                <x-button href="{{ route('attendances.index') }}" type="secondary">Cancel</x-button>
+                <x-button href="{{ route($prefix . 'attendances.index') }}" type="secondary">Cancel</x-button>
             </div>
         </form>
 
