@@ -32,7 +32,7 @@ Route::middleware(['auth', 'role:hr'])->prefix('hr')->name('hr.')->group(functio
     Route::resource('payrolls', PayrollController::class);
 });
 
-Route::middleware(['auth', 'role:employee'])->group(function () {
+Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee.')->group(function () {
     Route::get('/my-attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/my-attendance/{attendance}', [AttendanceController::class, 'show'])->name('attendance.show');
 });

@@ -38,6 +38,6 @@ class Payroll extends Model
     // Get the employee this payroll belongs to
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 }

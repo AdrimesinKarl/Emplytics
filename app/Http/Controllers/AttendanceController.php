@@ -66,7 +66,7 @@ public function index(Request $request): View
      */
     public function store(Request $request): RedirectResponse
     {
-        // Array-based validation is preferred in modern Laravel
+        // validate input
         $validated = $request->validate([
             'employee_id' => ['required', 'exists:employees,id'],
             'date'        => ['required', 'date'],
@@ -87,6 +87,8 @@ public function index(Request $request): View
      * @param Attendance $attendance (Route Model Binding)
      * @return View
      */
+
+    //fetch employees attendances in order by last name
     public function edit(Attendance $attendance): View
     {
         $employees = Employee::orderBy('last_name')->get();

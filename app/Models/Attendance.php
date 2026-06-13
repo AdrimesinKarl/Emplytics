@@ -31,9 +31,8 @@ class Attendance extends Model
     // Get the employee who owns this record
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
-
     /**
      * Calculate hours worked for this specific day.
      * Accessible via: $attendance->hours_worked

@@ -66,29 +66,14 @@ class User extends Authenticatable
     }
 
     public function employee() {
-        return $this->hasOne(Employee::class);
+        return $this->hasOne(Employee::class, 'employee_id');
     }
     public function attendances(){
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(Attendance::class, 'employee_id');
     }
 
     public function payrolls() {
-        return $this->hasMany(Payroll::class);
+        return $this->hasMany(Payroll::class, 'employee_id');
         }
 
-        // app/Models/User.php
-    public function isAdmin(): bool
-    {
-    return $this->role === 'admin';
-    }
-
-    public function isHR(): bool
-    {
-    return $this->role === 'hr';
-    }
-
-    public function isEmployee(): bool
-    {
-    return $this->role === 'employee';
-    }
 }

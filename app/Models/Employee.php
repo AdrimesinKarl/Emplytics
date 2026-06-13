@@ -13,7 +13,7 @@ class Employee extends Model
 
     // Fields that can be filled using the form
     protected $fillable = [
-        'user_id',
+        'employee_id',
         'first_name',
         'last_name',
         'email',
@@ -24,18 +24,18 @@ class Employee extends Model
     // Link to attendance records
     public function attendances(): HasMany
     {
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(Attendance::class, 'employee_id');
     }
 
     // Link to payroll history
     public function payrolls(): HasMany
     {
-        return $this->hasMany(Payroll::class);
+        return $this->hasMany(Payroll::class, 'employee_id');
     }
     
     // Link to user account
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
