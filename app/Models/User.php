@@ -75,5 +75,16 @@ class User extends Authenticatable
     public function payrolls() {
         return $this->hasMany(Payroll::class, 'employee_id');
         }
+    
+    public function isAdmin() {
+        return $this->role === "admin";
+    }
 
+    public function isHR() {
+        return $this->role === "hr";
+    }
+
+    public function isEmployee() {
+        return $this->role === "employee";
+    }
 }

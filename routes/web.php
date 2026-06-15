@@ -20,21 +20,25 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+    //admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::resource('attendances', AttendanceController::class);
     Route::resource('payrolls', PayrollController::class);
 });
 
+    //hr
 Route::middleware(['auth', 'role:hr'])->prefix('hr')->name('hr.')->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::resource('attendances', AttendanceController::class);
     Route::resource('payrolls', PayrollController::class);
 });
 
+    //employee
 Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee.')->group(function () {
-    Route::get('/my-attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/my-attendance/{attendance}', [AttendanceController::class, 'show'])->name('attendance.show');
+    Route::get('/payrolls', [PayrollController::class, 'index'])->name('payroll.index');
 });
 
 require __DIR__.'/auth.php';
