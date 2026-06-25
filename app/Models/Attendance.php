@@ -32,7 +32,7 @@ class Attendance extends Model
     // Get the employee who owns this record
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
     
     /**

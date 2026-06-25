@@ -5,6 +5,10 @@ namespace App\Providers;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Attendance;
+use App\Models\Payroll;
+use App\Policies\AttendancePolicy;
+use App\Policies\PayrollPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::policy(Attendance::class, AttendancePolicy::class);
+        Gate::policy(Payroll::class, PayrollPolicy::class);
     }
 }

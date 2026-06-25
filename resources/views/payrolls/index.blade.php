@@ -8,7 +8,9 @@
 
     <div class="header-section">
         <h1>Payroll List</h1>
-        <x-button href="{{ route($prefix . 'payrolls.create') }}">Generate New Payroll</x-button>
+        @can('create', App\Models\Payroll::class)
+            <x-button href="{{ route($prefix . 'payrolls.create') }}">Generate New Payroll</x-button>
+        @endcan
     </div>
 
     {{-- Success Message Display --}}
@@ -53,16 +55,20 @@
                             {{-- Action column fixed inside the <tr> --}}
                             <td>
                                 <div class="action-group" style="display: flex; gap: 5px;">
+                                    @can('update', $payroll)
                                     <x-button href="{{ route($prefix . 'payrolls.edit', $payroll) }}" type="secondary">
                                         Edit
                                     </x-button>
+                                    @endcan
 
                                     <form method="POST"
                                         action="{{ route($prefix . 'payrolls.destroy', $payroll) }}"
                                         onsubmit="return confirm('Delete this record permanently?')">
                                         @csrf
                                         @method('DELETE')
+                                        @can('delete', $payroll)
                                         <x-button type="submit" class="btn-danger">Delete</x-button>
+                                        @endcan
                                     </form>
                                 </div>
                             </td>
@@ -73,7 +79,9 @@
         </div>
     @else
         <div class="empty-state">
-            <p>No payroll records found. <a href="{{ route($prefix . 'payrolls.create') }}">Create the first one here.</a></p>
+            @can('create', App\Models\Payroll::class)
+                <p>No payroll records found. <a href="{{ route($prefix . 'payrolls.create') }}">Generate the first one here.</a></p>
+            @endcan
         </div>
     @endif
 @endsection

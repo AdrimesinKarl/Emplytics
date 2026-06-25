@@ -1,5 +1,4 @@
 <?php
-
     namespace App\Policies;
 
     use App\Models\User;
@@ -7,6 +6,13 @@
 
     class AttendancePolicy
     {
+        public function before(User $user, $ability): bool|null
+        {
+            if (strtolower($user->role) === 'admin') {
+                return true; // Admins can do everything, skip all other checks
+            }
+            return null; // fall through to individual policy methods for other roles
+        }
         /**
          * Create a new policy instance.
          */
@@ -23,7 +29,7 @@
         return in_array($user->role, ['admin', 'hr'])
             || $user->id === $attendance->employee_id;
         }
-
+        
         public function update(User $user, Attendance $attendance): bool
         {
             return in_array($user->role, ['admin', 'hr']);
