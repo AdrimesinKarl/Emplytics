@@ -36,9 +36,10 @@ Route::middleware(['auth', 'role:hr'])->prefix('hr')->name('hr.')->group(functio
 
     //employee
 Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee.')->group(function () {
-    Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendance.index');
-    Route::get('/my-attendance/{attendance}', [AttendanceController::class, 'show'])->name('attendance.show');
-    Route::get('/payrolls', [PayrollController::class, 'index'])->name('payroll.index');
+    Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+    Route::get('/my-attendance/{attendance}', [AttendanceController::class, 'show'])->name('attendances.show');
+    Route::get('/payrolls', [PayrollController::class, 'index'])->name('payrolls.index');
+    Route::get('/payrolls/{payroll}', [PayrollController::class, 'show'])->name('payrolls.show');
 });
 
 require __DIR__.'/auth.php';

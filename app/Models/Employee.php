@@ -21,6 +21,11 @@ class Employee extends Model
         'hourly_rate'
     ];
 
+    // Link to the user account associated with this employee
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    
     // Link to attendance records
     public function attendances(): HasMany
     {
@@ -31,11 +36,6 @@ class Employee extends Model
     public function payrolls(): HasMany
     {
         return $this->hasMany(Payroll::class, 'employee_id');
-    }
-    
-    // Link to user account
-    public function user() {
-        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**

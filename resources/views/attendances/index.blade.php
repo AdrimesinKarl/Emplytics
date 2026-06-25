@@ -27,7 +27,7 @@
 
 @section('title', 'Attendance List')
 
-@section('content')
+        @section('content')
 
 @php $prefix = auth()->user()->role . '.'; @endphp
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use User;
 
 class Attendance extends Model
 {
@@ -31,8 +32,9 @@ class Attendance extends Model
     // Get the employee who owns this record
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(User::class, 'employee_id');
     }
+    
     /**
      * Calculate hours worked for this specific day.
      * Accessible via: $attendance->hours_worked
