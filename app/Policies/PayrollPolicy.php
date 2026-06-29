@@ -7,9 +7,13 @@ use App\Models\Payroll;
 
 class PayrollPolicy
 {
-    /**
-         * Create a new policy instance.
-         */
+        public function before(User $user, $ability): bool|null
+        {
+            if (strtolower($user->role) === 'admin') {
+                return true; // Admins can do everything, skip all other checks
+            }
+            return null; // fall through to individual policy methods for other roles
+        }
         public function create(User $user): bool
         {
             return in_array($user->role, ['admin', 'hr']);

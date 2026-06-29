@@ -8,7 +8,7 @@
 <div class="container">
     <div class="header-section">
         <h1>Attendance List</h1>
-        @can('create', App\Models\Attendance::class)
+        @can('create' , App\Models\Attendance::class)
             <x-button href="{{ route($prefix . 'attendances.create') }}">Record New Attendance</x-button>
         @endcan
     </div>
@@ -20,7 +20,7 @@
             <input type="date" id="date" name="date" value="{{ request('date') }}">
             <x-button type="submit" variant="secondary">Apply Filter</x-button>
             @if(request('date'))
-                <a href="{{ route($prefix . 'attendances.index') }}" class="btn-link">Clear Filter</a>
+                <x-button href="{{ route($prefix . 'attendances.index') }}" class="btn-link">Clear Filter</x-button>
             @endif
         </form>
     </div>
@@ -36,9 +36,7 @@
                         <th>Check In</th>
                         <th>Check Out</th>
                         <th>Hours Worked</th>
-                        @canany(['update', 'delete'], 'attendances')
-                            <th>Actions</th>
-                        @endcanany
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,20 +47,18 @@
                             <td>{{ $attendance->check_in ? $attendance->check_in->format('h:i A') : '--' }}</td>
                             <td>{{ $attendance->check_out ? $attendance->check_out->format('h:i A') : '--' }}</td>
                             <td><strong>{{ number_format($attendance->hours_worked, 2) }} hrs</strong></td>
-                            @canany(['update', 'delete'], 'attendances')
                                 <td>
                                     @can('update', $attendance)
-                                        <a href="{{ route($prefix . 'attendances.edit', $attendance) }}">Edit</a>
+                                        <x-button href="{{ route($prefix . 'attendances.edit', $attendance) }}">Edit</x-button>
                                     @endcan
                                     @can('delete', $attendance)
                                         <form action="{{ route($prefix . 'attendances.destroy', $attendance) }}" method="POST" style="display:inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" onclick="return confirm('Delete this record?')">Delete</button>
+                                            <x-button type="submit" onclick="return confirm('Delete this record?')">Delete</x-button>
                                         </form>
                                     @endcan
                                 </td>
-                            @endcanany
                         </tr>
                     @endforeach
                 </tbody>
