@@ -18,7 +18,7 @@ class AttendanceController extends Controller
         return auth()->user()->role . '.';
     }
     
-public function index(Request $request): View
+    public function index(Request $request): View
 {
     $user = auth()->user();
 
@@ -36,7 +36,7 @@ public function index(Request $request): View
     $attendances = $query->latest()->get();
 
     return view('attendances.index', compact('attendances'));
-}
+    }
 /**
      * Show the form for recording a new attendance entry.
      *
