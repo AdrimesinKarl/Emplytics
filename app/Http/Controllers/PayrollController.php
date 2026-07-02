@@ -99,7 +99,6 @@ class PayrollController extends Controller
         ]);
 
         $prefix = $this->getPrefix();
-
         return redirect()->route($prefix . 'payrolls.index')->with('success', 'Payroll generated successfully');
     }
     /**
@@ -110,6 +109,8 @@ class PayrollController extends Controller
      */
     public function edit(Payroll $payroll): View
     {
+        $this->authorize('update', $payroll);
+
         $employees = Employee::all();
         return view('payrolls.edit', compact('payroll', 'employees'));
     }
@@ -123,6 +124,8 @@ class PayrollController extends Controller
      */
     public function update(Request $request, Payroll $payroll): RedirectResponse
     {
+        $this->authorize('update', $payroll);
+
         $validated = $request->validate([
             'employee_id'      => ['required', 'exists:employees,id'],
             'pay_period_start' => ['required', 'date'],
@@ -134,7 +137,6 @@ class PayrollController extends Controller
         $payroll->update($validated);
 
         $prefix = $this->getPrefix();
-
         return redirect()->route($prefix . 'payrolls.index')->with('success', 'Payroll updated successfully');
     }
 
@@ -146,9 +148,11 @@ class PayrollController extends Controller
      */
     public function destroy(Payroll $payroll): RedirectResponse
     {
-        $payroll->delete();
-        $prefix = $this->getPrefix();
+        $this->authorize('delete', $payroll);
 
+        $payroll->delete();
+        
+        $prefix = $this->getPrefix();
         return redirect()->route($prefix . 'payrolls.index')->with('success', 'Payroll deleted successfully!');
     }
 }

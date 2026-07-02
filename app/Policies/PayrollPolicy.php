@@ -9,10 +9,12 @@ class PayrollPolicy
 {
         public function before(User $user, $ability): bool|null
         {
+            // Admins can do everything, skip all other checks
             if (strtolower($user->role) === 'admin') {
-                return true; // Admins can do everything, skip all other checks
+                return true;
             }
-            return null; // fall through to individual policy methods for other roles
+            // fall through to individual policy methods for other roles
+            return null;
         }
         public function create(User $user): bool
         {

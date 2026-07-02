@@ -19,29 +19,25 @@ class AttendanceController extends Controller
     }
     
     public function index(Request $request): View
-{
-    $user = auth()->user();
+    {
+        // Fetch the authenticated user
+        $user = auth()->user();
 
-    // Base query
-    $query = $user->role === 'employee'
-        ? $user->attendances()
-        : Attendance::query();
+        // Base query
+        $query = $user->role === 'employee'
+            ? $user->attendances()
+            : Attendance::query();
 
-    // Apply date filter
-    if ($request->filled('date')) {
-        $query->whereDate('date', $request->date);
+        // Apply date filter
+        if ($request->filled('date')) {
+            $query->whereDate('date', $request->date);
+        }
+
+        // Execute query
+        $attendances = $query->latest()->get();
+
+        return view('attendances.index', compact('attendances'));
     }
-
-    // Execute query
-    $attendances = $query->latest()->get();
-
-    return view('attendances.index', compact('attendances'));
-    }
-/**
-     * Show the form for recording a new attendance entry.
-     *
-     * @return View
-     */
 
     public function show(Attendance $attendance): View
     {
@@ -50,12 +46,13 @@ class AttendanceController extends Controller
 
         return view('attendances.show' , compact('attendance'));
     }
+    
     public function create(): View
     {
         // Fetch employees to populate the selection dropdown
         $employees = Employee::orderBy('last_name')->get();
-        $prefix = $this->getPrefix();
 
+        $prefix = $this->getPrefix();
         return view('attendances.create', compact('employees'));
     }
     /**
@@ -77,7 +74,6 @@ class AttendanceController extends Controller
         Attendance::create($validated);
 
         $prefix = $this->getPrefix();
-
         return redirect()->route($prefix . 'attendances.index')
             ->with('success', 'Attendance recorded successfully!');
     }
@@ -91,6 +87,8 @@ class AttendanceController extends Controller
     //fetch employees attendances in order by last name
     public function edit(Attendance $attendance): View
     {
+        $this->authorize('update', $attendance);
+
         $employees = Employee::orderBy('last_name')->get();
         
         return view('attendances.edit', compact('attendance', 'employees'));
@@ -104,6 +102,8 @@ class AttendanceController extends Controller
      */
     public function update(Request $request, Attendance $attendance): RedirectResponse
     {
+        $this->authorize('update', $attendance);
+
         $validated = $request->validate([
             'employee_id' => ['required', 'exists:employees,id'],
             'date' => ['required', 'date'],
@@ -114,7 +114,6 @@ class AttendanceController extends Controller
         $attendance->update($validated);
 
         $prefix = $this->getPrefix();
-
         return redirect()->route($prefix . 'attendances.index')
             ->with('success', 'Attendance updated successfully!');
     }
@@ -126,10 +125,11 @@ class AttendanceController extends Controller
      */
     public function destroy(Attendance $attendance): RedirectResponse
     {
+        $this->authorize('delete', $attendance);
+
         $attendance->delete();
 
         $prefix = $this->getPrefix();
-
         return redirect()->route($prefix . 'attendances.index')
             ->with('success', 'Attendance deleted successfully!');
     }

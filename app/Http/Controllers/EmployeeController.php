@@ -78,9 +78,8 @@ class EmployeeController extends Controller
         'position' => $request->position,
         'hourly_rate' => $request->hourly_rate,
     ]);
-        $prefix = $this->getPrefix();
 
-        // Redirect with a success notification
+        $prefix = $this->getPrefix();
         return redirect()->route($prefix . 'employees.index')
             ->with('success', 'Employee created successfully!');
     }
@@ -93,6 +92,8 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee): View
     {
+        $this->authorize('update', $employee);
+
         return view('employees.edit', compact('employee'));
     }
     /**
@@ -104,6 +105,7 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Employee $employee): RedirectResponse
     {
+        $this->authorize('update', $employee);
         // Validation rules, ignoring the current employee ID for the unique email check
         $validated = $request->validate([
             'first_name'  => ['required', 'string', 'max:255'],
@@ -116,7 +118,6 @@ class EmployeeController extends Controller
         $employee->update($validated);
 
         $prefix = $this->getPrefix();
-
         return redirect()->route($prefix . 'employees.index')
             ->with('success', 'Employee updated successfully');
     }
@@ -128,11 +129,11 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee): RedirectResponse
     {
+        $this->authorize('delete', $employee);
         // Delete the record from the database
         $employee->delete();
 
         $prefix = $this->getPrefix();
-
         return redirect()->route($prefix . 'employees.index')
             ->with('success', 'Employee deleted successfully');
     }
